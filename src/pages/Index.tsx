@@ -96,9 +96,12 @@ export default function Index() {
       const { data, error } = await supabase.rpc("place_order", {
         p_shipping_json: ship,
         p_payment_method: payment,
-        p_items: JSON.stringify(items),
+        p_items: items,
       });
-      if (error) throw error;
+      if (error) {
+        console.error("[placeOrder] RPC error:", error);
+        throw new Error(error.message || "Failed to place order.");
+      }
       const result = data as { order_id: string; total: number } | null;
       if (!result) throw new Error("No response from server");
       setOrderId(result.order_id);
