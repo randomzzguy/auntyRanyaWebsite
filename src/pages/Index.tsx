@@ -56,13 +56,14 @@ export default function Index() {
   const [productModalOpen, setProductModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [modalQty, setModalQty] = useState(1);
+  const [legalModal, setLegalModal] = useState<"privacy" | "terms" | "refund" | "shipping" | null>(null);
 
   useEffect(() => {
-    document.body.style.overflow = cartOpen || checkoutOpen || productModalOpen ? "hidden" : "";
+    document.body.style.overflow = cartOpen || checkoutOpen || productModalOpen || legalModal ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [cartOpen, checkoutOpen, productModalOpen]);
+  }, [cartOpen, checkoutOpen, productModalOpen, legalModal]);
 
   const closePanels = () => {
     setCartOpen(false);
@@ -452,6 +453,17 @@ export default function Index() {
           <div>
             <div className="font-display text-2xl font-extrabold">Ranya Ibrahim Ahmed</div>
             <p className="mt-3 text-paper/70">Imaginative children's books designed to nurture a love of reading and learning.</p>
+            <div className="mt-4 flex items-center gap-3">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-paper/10 border border-paper/20 hover:bg-accent hover:border-accent transition-colors" aria-label="Facebook">
+                <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-paper/10 border border-paper/20 hover:bg-accent hover:border-accent transition-colors" aria-label="Instagram">
+                <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+              </a>
+              <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-paper/10 border border-paper/20 hover:bg-accent hover:border-accent transition-colors" aria-label="TikTok">
+                <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.88-2.89 2.89 2.89 0 012.88-2.89c.2 0 .39.03.57.08V10.3a6.36 6.36 0 00-.57-.03A6.34 6.34 0 005.4 16.6a6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V9.07a8.33 8.33 0 004.83 1.54V7.15a4.85 4.85 0 01-3.32-1.46z"/></svg>
+              </a>
+            </div>
           </div>
           <div>
             <h4 className="text-paper text-lg font-extrabold mb-4">Quick Links</h4>
@@ -464,8 +476,8 @@ export default function Index() {
           <div>
             <h4 className="text-paper text-lg font-extrabold mb-4">Legal</h4>
             <ul className="space-y-2 text-paper/80">
-              {[["Privacy Policy", "/privacy"], ["Terms of Service", "/terms"], ["Refund Policy", "/refund"], ["Shipping Policy", "/shipping"]].map(([l, h]) => (
-                <li key={h}><Link to={h} className="hover:text-accent transition-colors">{l}</Link></li>
+              {[["Privacy Policy", "privacy"], ["Terms of Service", "terms"], ["Refund Policy", "refund"], ["Shipping Policy", "shipping"]].map(([l, k]) => (
+                <li key={k}><button onClick={() => setLegalModal(k as "privacy" | "terms" | "refund" | "shipping")} className="hover:text-accent transition-colors text-left">{l}</button></li>
               ))}
             </ul>
           </div>
@@ -709,6 +721,78 @@ export default function Index() {
                 Add {modalQty} to Cart — EGP {selectedProduct.price * modalQty}
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+    )}
+
+    {/* Legal Modal */}
+    {legalModal && (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-ink/70 p-4"
+        onClick={() => setLegalModal(null)}
+      >
+        <div
+          className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-3xl border-2 border-ink bg-paper brutal shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="sticky top-0 z-10 flex items-center justify-between bg-paper border-b-2 border-ink p-4 rounded-t-3xl">
+            <h2 className="text-xl font-extrabold">
+              {legalModal === "privacy" ? "Privacy Policy" : legalModal === "terms" ? "Terms of Service" : legalModal === "refund" ? "Refund & Return Policy" : "Shipping Policy"}
+            </h2>
+            <button
+              onClick={() => setLegalModal(null)}
+              className="rounded-full bg-paper border-2 border-ink px-3 py-2 font-bold text-sm brutal-sm hover:bg-destructive hover:text-destructive-foreground transition-colors"
+            >
+              ✕ Close
+            </button>
+          </div>
+          <div className="p-6 text-muted-foreground space-y-4 text-sm leading-relaxed">
+            {legalModal === "privacy" && (
+              <>
+                <p>This Privacy Policy describes how your personal information is collected, used, and shared when you visit or make a purchase from our website.</p>
+                <h3 className="text-lg font-extrabold text-ink mt-6">Information We Collect</h3>
+                <p>When you visit the site, we automatically collect certain information about your device, including information about your web browser, IP address, time zone, and some of the cookies that are installed on your device.</p>
+                <p>When you make a purchase, we collect your name, billing address, shipping address, payment information, email address, and phone number.</p>
+                <h3 className="text-lg font-extrabold text-ink mt-6">How We Use Your Information</h3>
+                <p>We use the Order Information to fulfill orders, communicate with you, screen for potential risk or fraud, and provide you with information about our products or services.</p>
+                <p className="pt-4">Questions? Contact us at <a className="text-primary font-semibold underline-offset-4 hover:underline" href="mailto:aroaajm@gmail.com">aroaajm@gmail.com</a>.</p>
+              </>
+            )}
+            {legalModal === "terms" && (
+              <>
+                <p>These Terms of Service govern your use of our website and the purchase of products and services offered by Ranya Ibrahim Ahmed. By accessing or using the website, you agree to be bound by these Terms.</p>
+                <h3 className="text-lg font-extrabold text-ink mt-6">Online Store Terms</h3>
+                <p>By agreeing to these Terms, you represent that you are at least the age of majority in your state or province of residence. You may not use our products for any illegal or unauthorized purpose.</p>
+                <h3 className="text-lg font-extrabold text-ink mt-6">Accuracy of Information</h3>
+                <p>We are not responsible if information made available on this site is not accurate, complete or current. The material on this site is provided for general information only.</p>
+                <p className="pt-4">Questions? Contact us at <a className="text-primary font-semibold underline-offset-4 hover:underline" href="mailto:aroaajm@gmail.com">aroaajm@gmail.com</a>.</p>
+              </>
+            )}
+            {legalModal === "refund" && (
+              <>
+                <p>We want you to be completely satisfied with your purchase. If you are not entirely happy with your order, we're here to help.</p>
+                <h3 className="text-lg font-extrabold text-ink mt-6">Returns</h3>
+                <p>You have 14 calendar days to return an item from the date you received it. To be eligible for a return, your item must be unused and in the same condition that you received it, in the original packaging, with receipt or proof of purchase.</p>
+                <h3 className="text-lg font-extrabold text-ink mt-6">Refunds</h3>
+                <p>Once we receive your item, we will inspect it and notify you on the status of your refund. If approved, we will initiate a refund to your original method of payment.</p>
+                <h3 className="text-lg font-extrabold text-ink mt-6">Shipping</h3>
+                <p>You will be responsible for paying for your own shipping costs for returning your item. Shipping costs are non-refundable.</p>
+                <p className="pt-4">Questions? Contact us at <a className="text-primary font-semibold underline-offset-4 hover:underline" href="mailto:aroaajm@gmail.com">aroaajm@gmail.com</a>.</p>
+              </>
+            )}
+            {legalModal === "shipping" && (
+              <>
+                <p>We aim to deliver your books and services as quickly and safely as possible. Below you will find details about our shipping process and estimated delivery times within Egypt.</p>
+                <h3 className="text-lg font-extrabold text-ink mt-6">Processing Time</h3>
+                <p>All orders are processed within 1–2 business days. Orders are not shipped or delivered on weekends or holidays.</p>
+                <h3 className="text-lg font-extrabold text-ink mt-6">Shipping Rates & Delivery Estimates</h3>
+                <p>Shipping within Alexandria is typically 1–2 business days. Shipping to other governorates in Egypt is typically 3–5 business days.</p>
+                <h3 className="text-lg font-extrabold text-ink mt-6">Shipment Confirmation</h3>
+                <p>You will receive a Shipment Confirmation email once your order has shipped containing your tracking number(s). The tracking number will be active within 24 hours.</p>
+                <p className="pt-4">Questions? Contact us at <a className="text-primary font-semibold underline-offset-4 hover:underline" href="mailto:aroaajm@gmail.com">aroaajm@gmail.com</a>.</p>
+              </>
+            )}
           </div>
         </div>
       </div>
