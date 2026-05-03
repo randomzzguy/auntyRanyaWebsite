@@ -189,7 +189,7 @@ export default function Index() {
         <header className="fixed top-0 inset-x-0 z-50 border-b-2 border-ink bg-paper/90 backdrop-blur">
           <div className="container flex items-center justify-between py-3">
             <a href="#home" className="flex items-center gap-2 font-display text-xl font-extrabold">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary border-2 border-ink brutal-sm overflow-hidden">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white border-2 border-ink brutal-sm overflow-hidden">
                 <img src={magicPencil} alt="" className="h-6 w-6 object-contain" />
               </span>
               <span>Ranya Ibrahim Ahmed</span>
