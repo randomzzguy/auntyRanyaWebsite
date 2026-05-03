@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Ink-on-paper editorial palette */
+    --background: 42 38% 94%;          /* warm paper */
+    --foreground: 20 15% 12%;          /* deep ink */
+
+    --paper: 40 50% 97%;
+    --ink: 20 14% 10%;
+
+    --card: 40 50% 97%;
+    --card-foreground: 20 15% 12%;
+
+    --popover: 40 50% 97%;
+    --popover-foreground: 20 15% 12%;
+
+    --primary: 16 78% 52%;             /* vermillion */
+    --primary-foreground: 40 50% 97%;
+
+    --secondary: 220 70% 28%;          /* deep cobalt */
+    --secondary-foreground: 40 50% 97%;
+
+    --accent: 45 92% 56%;              /* mustard */
+    --accent-foreground: 20 15% 12%;
+
+    --mint: 160 38% 62%;
+    --berry: 340 65% 55%;
+
+    --muted: 38 25% 88%;
+    --muted-foreground: 20 10% 38%;
+
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 40 50% 97%;
+
+    --border: 20 14% 10%;
+    --input: 20 15% 20%;
+    --ring: 16 78% 52%;
+
+    --radius: 1.25rem;
+
+    --shadow-brutal: 6px 6px 0 0 hsl(var(--ink));
+    --shadow-brutal-lg: 10px 10px 0 0 hsl(var(--ink));
+    --shadow-brutal-sm: 3px 3px 0 0 hsl(var(--ink));
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+    background-image:
+      radial-gradient(hsl(var(--ink) / 0.08) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: hsl(var(--ink));
+  }
+  ::selection { background: hsl(var(--accent)); color: hsl(var(--ink)); }
+}
+
+@layer components {
+  .ink-border { @apply border-2 border-foreground; }
+  .brutal { box-shadow: var(--shadow-brutal); }
+  .brutal-sm { box-shadow: var(--shadow-brutal-sm); }
+  .brutal-lg { box-shadow: var(--shadow-brutal-lg); }
+  .brutal-hover {
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .brutal-hover:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 9px 9px 0 0 hsl(var(--ink));
+  }
+  .handwritten { font-family: 'Caveat', cursive; }
+  .display { font-family: 'Fraunces', Georgia, serif; }
+  .tape {
+    position: absolute;
+    background: hsl(var(--accent) / 0.85);
+    height: 22px; width: 90px;
+    transform: rotate(-4deg);
+    box-shadow: 0 1px 2px hsl(var(--ink) / 0.2);
+  }
+  .marquee {
+    display: flex; gap: 2.5rem;
+    animation: marquee 28s linear infinite;
+    width: max-content;
+  }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
+  50% { transform: translateY(-12px) rotate(var(--r, 0deg)); }
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.float-slow { animation: float-slow 6s ease-in-out infinite; }
+.wiggle { animation: wiggle 3.5s ease-in-out infinite; }
+.rise { animation: rise .7s ease-out both; }
