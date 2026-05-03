@@ -5,7 +5,7 @@ import { z } from "zod";
 import heroBooks from "@/assets/hero-books.jpg";
 import aboutAuthor from "@/assets/about-author.jpg";
 import { toast } from "sonner";
-import { useProducts } from "@/hooks/useProducts";
+import { useProducts, type Product } from "@/hooks/useProducts";
 import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabase";
@@ -40,7 +40,7 @@ const contactSchema = z.object({
 
 export default function Index() {
   const { data: products, isLoading: productsLoading, error: productsError } = useProducts();
-  const { cart, total, count, addToCart, removeItem, clearCart } = useCart();
+  const { cart, total, count, addToCart, removeItem, clearCart, updateQty } = useCart();
   const { user, isAdmin } = useAuth();
 
   const [cartOpen, setCartOpen] = useState(false);
@@ -52,17 +52,47 @@ export default function Index() {
   const [payment, setPayment] = useState<"cod" | "vodafone" | "bank">("cod");
   const [placing, setPlacing] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
+  const [productModalOpen, setProductModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [modalQty, setModalQty] = useState(1);
 
   useEffect(() => {
-    document.body.style.overflow = cartOpen || checkoutOpen ? "hidden" : "";
+    document.body.style.overflow = cartOpen || checkoutOpen || productModalOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [cartOpen, checkoutOpen]);
+  }, [cartOpen, checkoutOpen, productModalOpen]);
 
   const closePanels = () => {
     setCartOpen(false);
     setCheckoutOpen(false);
+  };
+
+  const openProductModal = (product: Product) => {
+    setSelectedProduct(product);
+    setModalQty(1);
+    setProductModalOpen(true);
+  };
+
+  const closeProductModal = () => {
+    setProductModalOpen(false);
+    setSelectedProduct(null);
+  };
+
+  const addModalProductToCart = () => {
+    if (!selectedProduct) return;
+    const existing = cart.find((c) => c.id === selectedProduct.id);
+    if (existing) {
+      updateQty(selectedProduct.id, existing.qty + modalQty);
+    } else {
+      addToCart(selectedProduct);
+      if (modalQty > 1) {
+        updateQty(selectedProduct.id, modalQty);
+      }
+    }
+    toast.success(`${modalQty} × ${selectedProduct.name} added to cart`);
+    closeProductModal();
+    setCartOpen(true);
   };
 
   const paymentLabel = { cod: "Cash on Delivery", vodafone: "Vodafone Cash", bank: "Bank Transfer" }[payment];
@@ -342,17 +372,17 @@ export default function Index() {
             {products?.map((p, i) => {
               const tone = p.badgeTone === "primary" ? "bg-primary text-primary-foreground" : p.badgeTone === "accent" ? "bg-accent text-ink" : "bg-mint text-ink";
               return (
-                <article key={p.id} className={`group relative rounded-3xl border-2 border-ink bg-paper overflow-hidden brutal brutal-hover ${i === 1 ? "lg:translate-y-6" : ""}`}>
+                <article key={p.id} onClick={() => openProductModal(p)} className={`cursor-pointer group relative rounded-3xl border-2 border-ink bg-paper overflow-hidden brutal brutal-hover ${i === 1 ? "lg:translate-y-6" : ""}`}>
                   <span className={`absolute top-4 left-4 z-10 rounded-full px-3 py-1 text-xs font-bold border-2 border-ink ${tone}`}>{p.badge}</span>
                   <div className="aspect-square overflow-hidden border-b-2 border-ink bg-muted">
                     <img src={p.image} alt={p.name} width={768} height={768} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   </div>
                   <div className="p-6">
                     <h3 className="text-xl font-extrabold leading-tight">{p.name}</h3>
-                    <p className="mt-2 text-muted-foreground text-sm">{p.desc}</p>
+                    <p className="mt-2 text-muted-foreground text-sm line-clamp-2">{p.desc}</p>
                     <div className="mt-5 flex items-center justify-between">
                       <span className="font-display text-2xl font-extrabold text-primary">EGP {p.price}</span>
-                      <button onClick={() => addToCart(p)} className="rounded-full bg-ink text-paper px-5 py-2.5 text-sm font-bold border-2 border-ink hover:bg-primary hover:text-primary-foreground transition-colors">
+                      <button onClick={(e) => { e.stopPropagation(); addToCart(p); }} className="rounded-full bg-ink text-paper px-5 py-2.5 text-sm font-bold border-2 border-ink hover:bg-primary hover:text-primary-foreground transition-colors">
                         Add to Cart
                       </button>
                     </div>
@@ -622,6 +652,64 @@ export default function Index() {
         </div>
       </aside>
     </div>
+
+    {/* Product Detail Modal */}
+    {productModalOpen && selectedProduct && (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-ink/70 p-4"
+        onClick={closeProductModal}
+      >
+        <div
+          className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border-2 border-ink bg-paper brutal shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            onClick={closeProductModal}
+            className="absolute top-4 right-4 z-10 rounded-full bg-paper border-2 border-ink px-3 py-2 font-bold text-sm brutal-sm hover:bg-destructive hover:text-destructive-foreground transition-colors"
+          >
+            ✕
+          </button>
+          <div className="aspect-video overflow-hidden border-b-2 border-ink bg-muted">
+            <img src={selectedProduct.image} alt={selectedProduct.name} className="h-full w-full object-cover" />
+          </div>
+          <div className="p-6 space-y-4">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <span className={`inline-block rounded-full px-3 py-1 text-xs font-bold border-2 border-ink mb-2 ${selectedProduct.badgeTone === "primary" ? "bg-primary text-primary-foreground" : selectedProduct.badgeTone === "accent" ? "bg-accent text-ink" : "bg-mint text-ink"}`}>
+                  {selectedProduct.badge}
+                </span>
+                <h3 className="text-2xl md:text-3xl font-extrabold leading-tight">{selectedProduct.name}</h3>
+              </div>
+              <span className="font-display text-3xl font-extrabold text-primary whitespace-nowrap">EGP {selectedProduct.price}</span>
+            </div>
+            <p className="text-muted-foreground leading-relaxed">{selectedProduct.desc}</p>
+            <div className="flex items-center gap-4 pt-2">
+              <div className="flex items-center rounded-full border-2 border-ink bg-paper overflow-hidden brutal-sm">
+                <button
+                  onClick={() => setModalQty((q) => Math.max(1, q - 1))}
+                  className="px-4 py-2 font-bold hover:bg-accent/30 transition-colors"
+                >
+                  −
+                </button>
+                <span className="w-10 text-center font-bold text-sm">{modalQty}</span>
+                <button
+                  onClick={() => setModalQty((q) => q + 1)}
+                  className="px-4 py-2 font-bold hover:bg-accent/30 transition-colors"
+                >
+                  +
+                </button>
+              </div>
+              <button
+                onClick={addModalProductToCart}
+                className="flex-1 rounded-full bg-primary text-primary-foreground px-6 py-3 font-bold border-2 border-ink brutal brutal-hover text-sm"
+              >
+                Add {modalQty} to Cart — EGP {selectedProduct.price * modalQty}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
   </>
   );
 }
