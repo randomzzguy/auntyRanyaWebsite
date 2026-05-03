@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { z } from "zod";
 import heroBooks from "@/assets/hero-books.jpg";
 import aboutAuthor from "@/assets/about-author.jpg";
+import magicPencil from "@/assets/magicPencil.png";
 import { toast } from "sonner";
 import { useProducts, type Product } from "@/hooks/useProducts";
 import { useCart } from "@/hooks/useCart";
@@ -188,8 +189,10 @@ export default function Index() {
         <header className="fixed top-0 inset-x-0 z-50 border-b-2 border-ink bg-paper/90 backdrop-blur">
           <div className="container flex items-center justify-between py-3">
             <a href="#home" className="flex items-center gap-2 font-display text-xl font-extrabold">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground border-2 border-ink brutal-sm">R</span>
-              <span>Ibrahim<span className="text-primary">.</span> Ahmed</span>
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary border-2 border-ink brutal-sm overflow-hidden">
+                <img src={magicPencil} alt="" className="h-6 w-6 object-contain" />
+              </span>
+              <span>Ranya Ibrahim Ahmed</span>
             </a>
             <nav className={`${navOpen ? "flex" : "hidden"} md:flex absolute md:static top-full left-0 right-0 md:top-auto flex-col md:flex-row gap-4 md:gap-8 bg-paper md:bg-transparent border-b-2 md:border-0 border-ink p-5 md:p-0 font-medium`}>
               {[["Home", "#home"], ["About", "#about"], ["Store", "#store"], ["Contact", "#contact"]].map(([l, h]) => (
@@ -669,8 +672,8 @@ export default function Index() {
           >
             ✕
           </button>
-          <div className="aspect-video overflow-hidden border-b-2 border-ink bg-muted">
-            <img src={selectedProduct.image} alt={selectedProduct.name} className="h-full w-full object-cover" />
+          <div className="overflow-hidden border-b-2 border-ink bg-muted flex items-center justify-center p-4">
+            <img src={selectedProduct.image} alt={selectedProduct.name} className="max-h-[50vh] w-auto object-contain" />
           </div>
           <div className="p-6 space-y-4">
             <div className="flex items-start justify-between gap-4">
