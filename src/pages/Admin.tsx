@@ -8,15 +8,17 @@ import type { Database } from "@/lib/supabase";
 
 type OrderRow = Database["public"]["Tables"]["orders"]["Row"];
 type ProductRow = Database["public"]["Tables"]["products"]["Row"];
+type ContactRow = Database["public"]["Tables"]["contact_submissions"]["Row"];
 
 const ORDER_STATUSES = ["pending", "paid", "shipped", "delivered", "cancelled", "refunded"];
 
 export default function Admin() {
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
-  const [tab, setTab] = useState<"orders" | "products">("orders");
+  const [tab, setTab] = useState<"orders" | "products" | "messages">("orders");
   const [orders, setOrders] = useState<OrderRow[]>([]);
   const [products, setProducts] = useState<ProductRow[]>([]);
+  const [contacts, setContacts] = useState<ContactRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [productForm, setProductForm] = useState<Partial<ProductRow>>({ active: true, stock: 0, price: 0 });
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -34,14 +36,17 @@ export default function Admin() {
 
   const fetchData = async () => {
     setLoading(true);
-    const [ordersRes, productsRes] = await Promise.all([
+    const [ordersRes, productsRes, contactsRes] = await Promise.all([
       supabase.from("orders").select("*").order("created_at", { ascending: false }),
       supabase.from("products").select("*").order("created_at", { ascending: false }),
+      supabase.from("contact_submissions").select("*").order("created_at", { ascending: false }),
     ]);
     if (ordersRes.error) toast.error("Failed to load orders.");
     if (productsRes.error) toast.error("Failed to load products.");
+    if (contactsRes.error) toast.error("Failed to load messages.");
     setOrders(ordersRes.data || []);
     setProducts(productsRes.data || []);
+    setContacts(contactsRes.data || []);
     setLoading(false);
   };
 
@@ -116,6 +121,17 @@ export default function Admin() {
     setProducts((prev) => prev.filter((p) => p.id !== id));
   };
 
+  const markContactRead = async (id: string, read: boolean) => {
+    const { error } = await supabase.from("contact_submissions").update({ read }).eq("id", id);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      setContacts((prev) => prev.map((c) => (c.id === id ? { ...c, read } : c)));
+    }
+  };
+
+  const unreadCount = useMemo(() => contacts.filter((c) => !c.read).length, [contacts]);
+
   const orderCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     orders.forEach((o) => {
@@ -167,6 +183,15 @@ export default function Admin() {
               className={`rounded-full px-5 py-2.5 font-bold border-2 border-ink brutal-sm ${tab === "products" ? "bg-primary text-primary-foreground" : "bg-paper"}`}
             >
               Products ({products.length})
+            </button>
+            <button
+              onClick={() => setTab("messages")}
+              className={`rounded-full px-5 py-2.5 font-bold border-2 border-ink brutal-sm ${tab === "messages" ? "bg-primary text-primary-foreground" : "bg-paper"}`}
+            >
+              Messages ({contacts.length})
+              {unreadCount > 0 && (
+                <span className="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-xs font-bold px-1.5">{unreadCount}</span>
+              )}
             </button>
           </div>
 
@@ -223,7 +248,7 @@ export default function Admin() {
                 {orders.length === 0 && <p className="px-4 py-6 text-muted-foreground">No orders yet.</p>}
               </div>
             </div>
-          ) : (
+          ) : tab === "products" ? (
             <div className="mt-8 grid lg:grid-cols-3 gap-8">
               <div className="lg:col-span-1 rounded-3xl border-2 border-ink bg-paper p-6 brutal">
                 <h2 className="text-xl font-extrabold">{editingId ? "Edit Product" : "New Product"}</h2>
@@ -309,6 +334,36 @@ export default function Admin() {
                 ))}
                 {products.length === 0 && <p className="text-muted-foreground">No products yet.</p>}
               </div>
+            </div>
+          ) : (
+            <div className="mt-8 space-y-4">
+              {contacts.map((c) => (
+                <div
+                  key={c.id}
+                  className={`rounded-3xl border-2 p-6 brutal-sm ${c.read ? "border-ink/30 bg-paper/70" : "border-ink bg-paper"}`}
+                >
+                  <div className="flex items-start justify-between gap-4 flex-wrap">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        {!c.read && <span className="inline-block h-2.5 w-2.5 rounded-full bg-destructive" />}
+                        <strong className="text-lg">{c.subject}</strong>
+                        <span className="text-xs text-muted-foreground">from {c.name} &lt;{c.email}&gt;</span>
+                      </div>
+                      <p className="text-muted-foreground whitespace-pre-wrap text-sm">{c.message}</p>
+                      <p className="mt-2 text-xs text-muted-foreground">{new Date(c.created_at).toLocaleString()}</p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        onClick={() => markContactRead(c.id, !c.read)}
+                        className="rounded-full bg-accent text-ink px-4 py-2 font-bold border-2 border-ink brutal-sm text-xs"
+                      >
+                        {c.read ? "Mark Unread" : "Mark Read"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {contacts.length === 0 && <p className="text-muted-foreground">No messages yet.</p>}
             </div>
           )}
         </div>

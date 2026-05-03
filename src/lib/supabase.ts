@@ -82,6 +82,23 @@ export interface Database {
         Insert: Database["public"]["Tables"]["user_roles"]["Row"];
         Update: Partial<Database["public"]["Tables"]["user_roles"]["Insert"]>;
       };
+      contact_submissions: {
+        Row: {
+          id: string;
+          name: string;
+          email: string;
+          subject: string;
+          message: string;
+          user_id: string | null;
+          read: boolean;
+          created_at: string;
+        };
+        Insert: Omit<Database["public"]["Tables"]["contact_submissions"]["Row"], "id" | "created_at"> & {
+          id?: string;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["contact_submissions"]["Insert"]>;
+      };
     };
   };
 }

@@ -148,13 +148,28 @@ export default function Index() {
     }
   };
 
-  const onContactSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [sendingContact, setSendingContact] = useState(false);
+
+  const onContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const obj = Object.fromEntries(fd.entries());
     const result = contactSchema.safeParse(obj);
     if (!result.success) {
       toast.error(result.error.errors[0].message);
+      return;
+    }
+    setSendingContact(true);
+    const { error } = await supabase.from("contact_submissions").insert({
+      name: result.data.name,
+      email: result.data.email,
+      subject: result.data.subject,
+      message: result.data.message,
+      user_id: user?.id || null,
+    });
+    setSendingContact(false);
+    if (error) {
+      toast.error(error.message || "Failed to send message.");
       return;
     }
     toast.success("Message sent! We'll get back to you soon.");
@@ -418,8 +433,8 @@ export default function Index() {
                 <label className="block text-sm font-semibold mb-1.5" htmlFor="message">Message</label>
                 <textarea id="message" name="message" rows={4} required className="w-full rounded-xl border-2 border-ink bg-paper px-4 py-3 focus:outline-none focus:bg-accent/20 transition-colors" />
               </div>
-              <button type="submit" className="w-full rounded-full bg-primary text-primary-foreground px-6 py-3.5 font-bold border-2 border-ink brutal brutal-hover">
-                Send Message →
+              <button type="submit" disabled={sendingContact} className="w-full rounded-full bg-primary text-primary-foreground px-6 py-3.5 font-bold border-2 border-ink brutal brutal-hover disabled:opacity-60">
+                {sendingContact ? "Sending..." : "Send Message →"}
               </button>
             </form>
           </div>

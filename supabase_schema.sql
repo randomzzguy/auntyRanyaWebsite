@@ -43,11 +43,24 @@ CREATE TABLE IF NOT EXISTS user_roles (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- 5. Contact submissions table
+CREATE TABLE IF NOT EXISTS contact_submissions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  subject TEXT NOT NULL,
+  message TEXT NOT NULL,
+  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  read BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- Enable RLS (idempotent)
 ALTER TABLE IF EXISTS products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS orders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS order_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS user_roles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS contact_submissions ENABLE ROW LEVEL SECURITY;
 
 -- Helper: is_admin (SECURITY DEFINER to avoid RLS recursion)
 -- Must be created BEFORE policies that reference it
@@ -75,6 +88,9 @@ DO $$ BEGIN
   DROP POLICY IF EXISTS "order_items_select_own_or_admin" ON order_items;
   DROP POLICY IF EXISTS "order_items_insert_own" ON order_items;
   DROP POLICY IF EXISTS "user_roles_select_self_or_admin" ON user_roles;
+  DROP POLICY IF EXISTS "contact_submissions_insert_public" ON contact_submissions;
+  DROP POLICY IF EXISTS "contact_submissions_select_admin" ON contact_submissions;
+  DROP POLICY IF EXISTS "contact_submissions_update_admin" ON contact_submissions;
 END $$;
 
 -- Policies: products (readable by all, writable by admin)
@@ -127,7 +143,24 @@ CREATE POLICY "order_items_insert_own"
 -- Policies: user_roles (readable by self, admin sees all)
 CREATE POLICY "user_roles_select_self_or_admin"
   ON user_roles FOR SELECT
+  TO authenticated
   USING (user_id = auth.uid() OR is_admin(auth.uid()));
+
+-- Policies: contact_submissions (public can insert, admin can read/update)
+CREATE POLICY "contact_submissions_insert_public"
+  ON contact_submissions FOR INSERT
+  TO public
+  WITH CHECK (true);
+
+CREATE POLICY "contact_submissions_select_admin"
+  ON contact_submissions FOR SELECT
+  TO authenticated
+  USING (is_admin(auth.uid()));
+
+CREATE POLICY "contact_submissions_update_admin"
+  ON contact_submissions FOR UPDATE
+  TO authenticated
+  USING (is_admin(auth.uid()));
 
 -- 5. Secure order placement RPC
 CREATE OR REPLACE FUNCTION place_order(
