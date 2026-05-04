@@ -20,7 +20,7 @@ BEGIN
     url := 'https://' || project_ref || '.supabase.co/functions/v1/send-order-notification',
     headers := jsonb_build_object(
       'Content-Type', 'application/json',
-      'Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvbnd6enN3ZGNtdm5oa3V3eHJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDQwNjQwMDAsImV4cCI6MjAxOTY0MDAwMH0'  -- REPLACE with your actual anon key if different
+      'Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvbnd6enN3ZGNtdm5oa3V3eHJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MDg5ODAsImV4cCI6MjA5MzI4NDk4MH0.FVoER_NjIdcJmmf7nl0Lro9vaOfjDZ8fdfOJsILXdDo'  -- REPLACE with your actual anon key if different
     ),
     body := jsonb_build_object('record', row_to_json(NEW))
   );
@@ -50,7 +50,7 @@ BEGIN
       url := 'https://' || project_ref || '.supabase.co/functions/v1/send-status-notification',
       headers := jsonb_build_object(
         'Content-Type', 'application/json',
-        'Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvbnd6enN3ZGNtdm5oa3V3eHJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDQwNjQwMDAsImV4cCI6MjAxOTY0MDAwMH0'  -- REPLACE with your actual anon key if different
+        'Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvbnd6enN3ZGNtdm5oa3V3eHJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MDg5ODAsImV4cCI6MjA5MzI4NDk4MH0.FVoER_NjIdcJmmf7nl0Lro9vaOfjDZ8fdfOJsILXdDo'  -- REPLACE with your actual anon key if different
       ),
       body := jsonb_build_object('record', row_to_json(NEW), 'old_record', row_to_json(OLD))
     );

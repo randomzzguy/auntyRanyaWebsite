@@ -22,7 +22,7 @@ serve(async (req) => {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'Ranya Ibrahim Ahmed <orders@resend.dev>',
+        from: 'Ranya Ibrahim Ahmed <onboarding@resend.dev>',
         to: [ADMIN_EMAIL],
         subject: `New Order #${record.id.slice(0,8)} — EGP ${record.total}`,
         html: `
