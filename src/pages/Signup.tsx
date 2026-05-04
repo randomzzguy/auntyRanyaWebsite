@@ -28,6 +28,8 @@ export default function Signup() {
       <Helmet>
         <title>Sign Up — Ranya Ibrahim Ahmed</title>
         <meta name="description" content="Create an account to order books and services." />
+        <link rel="canonical" href="https://aunty-ranya-website.vercel.app/signup" />
+        <meta name="robots" content="noindex, follow" />
       </Helmet>
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="w-full max-w-md rounded-3xl border-2 border-ink bg-paper p-8 brutal-lg">

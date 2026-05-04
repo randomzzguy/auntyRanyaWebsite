@@ -53,6 +53,8 @@ export default function Account() {
       <Helmet>
         <title>My Account — Ranya Ibrahim Ahmed</title>
         <meta name="description" content="View your order history and account details." />
+        <link rel="canonical" href="https://aunty-ranya-website.vercel.app/account" />
+        <meta name="robots" content="noindex, nofollow" />
       </Helmet>
       <div className="min-h-screen pt-28 pb-20">
         <div className="container">

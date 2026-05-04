@@ -5,7 +5,9 @@ export default function Privacy() {
     <>
       <Helmet>
         <title>Privacy Policy — Ranya Ibrahim Ahmed</title>
-        <meta name="description" content="Privacy policy for Ranya Ibrahim Ahmed's website and store." />
+        <meta name="description" content="Privacy policy for Ranya Ibrahim Ahmed's website and store. Learn how we collect, use, and protect your personal information." />
+        <link rel="canonical" href="https://aunty-ranya-website.vercel.app/privacy" />
+        <meta name="robots" content="index, follow" />
       </Helmet>
       <div className="min-h-screen pt-28 pb-20">
         <div className="container max-w-3xl">

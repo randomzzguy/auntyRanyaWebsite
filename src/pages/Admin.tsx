@@ -144,6 +144,9 @@ export default function Admin() {
     <>
       <Helmet>
         <title>Admin Dashboard — Ranya Ibrahim Ahmed</title>
+        <meta name="description" content="Admin dashboard for managing orders, products, and customer messages." />
+        <link rel="canonical" href="https://aunty-ranya-website.vercel.app/admin" />
+        <meta name="robots" content="noindex, nofollow" />
       </Helmet>
       <div className="min-h-screen pt-28 pb-20">
         <div className="container">

@@ -5,7 +5,9 @@ export default function Refund() {
     <>
       <Helmet>
         <title>Refund & Return Policy — Ranya Ibrahim Ahmed</title>
-        <meta name="description" content="Refund and return policy for Ranya Ibrahim Ahmed's store." />
+        <meta name="description" content="Refund and return policy for Ranya Ibrahim Ahmed's store. 14-day returns, refund process, and shipping details." />
+        <link rel="canonical" href="https://aunty-ranya-website.vercel.app/refund" />
+        <meta name="robots" content="index, follow" />
       </Helmet>
       <div className="min-h-screen pt-28 pb-20">
         <div className="container max-w-3xl">

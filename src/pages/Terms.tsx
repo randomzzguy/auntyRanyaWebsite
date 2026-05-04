@@ -5,7 +5,9 @@ export default function Terms() {
     <>
       <Helmet>
         <title>Terms of Service — Ranya Ibrahim Ahmed</title>
-        <meta name="description" content="Terms of service for Ranya Ibrahim Ahmed's website and store." />
+        <meta name="description" content="Terms of service for Ranya Ibrahim Ahmed's website and store. Read our online store terms, accuracy of information, and contact details." />
+        <link rel="canonical" href="https://aunty-ranya-website.vercel.app/terms" />
+        <meta name="robots" content="index, follow" />
       </Helmet>
       <div className="min-h-screen pt-28 pb-20">
         <div className="container max-w-3xl">

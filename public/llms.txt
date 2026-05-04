@@ -1,0 +1,50 @@
+# Ranya Ibrahim Ahmed — Children's Books & Creative Services
+
+## Overview
+Ranya Ibrahim Ahmed is an imaginative children's book author, illustrator, and educator based in Alexandria, Egypt. She creates educational children's books, offers custom story writing, book editing, and character concept design services. Her mission is to nurture a love of reading and learning in children through colorful, engaging stories.
+
+## Website Sections
+
+### Home
+- Hero section introducing Ranya Ibrahim Ahmed and her work
+- Book store featuring published children's books with covers, descriptions, and pricing
+- Services section: Custom Story Writing, Book Editing & Proofreading, Character Concepts
+- Contact form for inquiries
+
+### Store / Products
+- Educational children's books for ages 3–8
+- Books available in English and Arabic
+- Prices in Egyptian Pounds (EGP)
+- Products: "Amy & Alex" storybook, "Mrs. Alphabety" educational book, "My First Dictionary" learning book
+
+### Services
+1. **Custom Story Writing** — Personalized children's stories tailored to your child's interests and reading level
+2. **Book Editing & Proofreading** — Professional editing for children's manuscripts
+3. **Character Concepts** — Unique character designs for children's books and educational materials
+
+### Account
+- User registration and login
+- Order history and status tracking
+- Profile management
+
+### Admin Dashboard
+- Order management with status updates (pending, paid, shipped, delivered, cancelled, refunded)
+- Product inventory management
+- Contact form message inbox
+
+## Contact
+- Email: aroaajm@gmail.com
+- Facebook: https://www.facebook.com/ranya.ibrahimahmed
+- Instagram: https://www.instagram.com/aroaajm.educational.games/
+- TikTok: https://www.tiktok.com/@mrs.alphabetstories
+
+## Shipping & Policies
+- Shipping within Alexandria: 1–2 business days
+- Shipping to other Egyptian governorates: 3–5 business days
+- 14-day return policy for unused items in original packaging
+- Cash on delivery and digital payment options available
+
+## Technical
+- Built with React, TypeScript, TailwindCSS, and Supabase
+- Deployed on Vercel
+- Domain: https://aunty-ranya-website.vercel.app/

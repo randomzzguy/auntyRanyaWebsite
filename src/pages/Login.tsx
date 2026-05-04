@@ -28,6 +28,8 @@ export default function Login() {
       <Helmet>
         <title>Sign In — Ranya Ibrahim Ahmed</title>
         <meta name="description" content="Sign in to your account to view orders and manage your profile." />
+        <link rel="canonical" href="https://aunty-ranya-website.vercel.app/login" />
+        <meta name="robots" content="noindex, follow" />
       </Helmet>
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="w-full max-w-md rounded-3xl border-2 border-ink bg-paper p-8 brutal-lg">

@@ -184,21 +184,90 @@ export default function Index() {
       name: p.name,
       image: p.image,
       description: p.desc,
+      brand: {
+        "@type": "Brand",
+        name: "Ranya Ibrahim Ahmed",
+      },
       offers: {
         "@type": "Offer",
+        url: `https://aunty-ranya-website.vercel.app/#products`,
         priceCurrency: "EGP",
         price: p.price,
         availability: "https://schema.org/InStock",
+        seller: {
+          "@type": "Organization",
+          name: "Ranya Ibrahim Ahmed",
+        },
       },
     }));
   }, [products]);
+
+  const jsonLdOrganization = useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Ranya Ibrahim Ahmed",
+    url: "https://aunty-ranya-website.vercel.app/",
+    logo: "https://aunty-ranya-website.vercel.app/assets/magicPencil.png",
+    sameAs: [
+      "https://www.facebook.com/ranya.ibrahimahmed",
+      "https://www.instagram.com/aroaajm.educational.games/",
+      "https://www.tiktok.com/@mrs.alphabetstories",
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      email: "aroaajm@gmail.com",
+      contactType: "customer service",
+      areaServed: "EG",
+      availableLanguage: ["English", "Arabic"],
+    },
+  }), []);
+
+  const jsonLdWebsite = useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Ranya Ibrahim Ahmed — Imaginative Children's Books",
+    url: "https://aunty-ranya-website.vercel.app/",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: "https://aunty-ranya-website.vercel.app/?search={search_term_string}",
+      "query-input": "required name=search_term_string",
+    },
+  }), []);
+
+  const jsonLdBreadcrumb = useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://aunty-ranya-website.vercel.app/",
+      },
+    ],
+  }), []);
 
   return (
     <>
       <Helmet>
         <title>Ranya Ibrahim Ahmed — Imaginative Children's Books</title>
-        <meta name="description" content="Imaginative children's books, custom story writing, editing & character concepts by author Ranya Ibrahim Ahmed." />
+        <meta name="description" content="Imaginative children's books, custom story writing, editing & character concepts by author Ranya Ibrahim Ahmed. Shop educational books for kids in Egypt." />
+        <link rel="canonical" href="https://aunty-ranya-website.vercel.app/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://aunty-ranya-website.vercel.app/" />
+        <meta property="og:title" content="Ranya Ibrahim Ahmed — Imaginative Children's Books" />
+        <meta property="og:description" content="Imaginative children's books, custom story writing, editing & character concepts by author Ranya Ibrahim Ahmed. Shop educational books for kids in Egypt." />
+        <meta property="og:image" content="https://aunty-ranya-website.vercel.app/assets/hero-books.jpg" />
+        <meta property="og:site_name" content="Ranya Ibrahim Ahmed" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Ranya Ibrahim Ahmed — Imaginative Children's Books" />
+        <meta name="twitter:description" content="Imaginative children's books, custom story writing, editing & character concepts by author Ranya Ibrahim Ahmed." />
+        <meta name="twitter:image" content="https://aunty-ranya-website.vercel.app/assets/hero-books.jpg" />
         <script type="application/ld+json">{JSON.stringify(jsonLdProducts)}</script>
+        <script type="application/ld+json">{JSON.stringify(jsonLdOrganization)}</script>
+        <script type="application/ld+json">{JSON.stringify(jsonLdWebsite)}</script>
+        <script type="application/ld+json">{JSON.stringify(jsonLdBreadcrumb)}</script>
       </Helmet>
       <div className="min-h-screen text-foreground">
         {/* HEADER */}

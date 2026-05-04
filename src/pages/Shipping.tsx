@@ -5,7 +5,9 @@ export default function Shipping() {
     <>
       <Helmet>
         <title>Shipping Policy — Ranya Ibrahim Ahmed</title>
-        <meta name="description" content="Shipping policy for Ranya Ibrahim Ahmed's store." />
+        <meta name="description" content="Shipping policy for Ranya Ibrahim Ahmed's store. Processing times, delivery estimates within Egypt, and tracking information." />
+        <link rel="canonical" href="https://aunty-ranya-website.vercel.app/shipping" />
+        <meta name="robots" content="index, follow" />
       </Helmet>
       <div className="min-h-screen pt-28 pb-20">
         <div className="container max-w-3xl">
