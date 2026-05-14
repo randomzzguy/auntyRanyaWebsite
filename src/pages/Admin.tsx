@@ -22,6 +22,7 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
   const [productForm, setProductForm] = useState<Partial<ProductRow>>({ active: true, stock: 0, price: 0 });
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const logout = async () => {
     await supabase.auth.signOut();
@@ -78,6 +79,30 @@ export default function Admin() {
     a.download = `orders-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingImage(true);
+
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${crypto.randomUUID()}.${ext}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("product-images")
+      .upload(path, file, { upsert: true });
+
+    if (uploadError) {
+      toast.error(uploadError.message);
+      setUploadingImage(false);
+      return;
+    }
+
+    const { data } = supabase.storage.from("product-images").getPublicUrl(path);
+    setProductForm((prev) => ({ ...prev, image_url: data.publicUrl }));
+    toast.success("Image uploaded.");
+    setUploadingImage(false);
   };
 
   const saveProduct = async () => {
@@ -262,7 +287,6 @@ export default function Admin() {
                     { key: "description", label: "Description", type: "text" },
                     { key: "badge", label: "Badge", type: "text" },
                     { key: "badge_tone", label: "Badge Tone", type: "text" },
-                    { key: "image_url", label: "Image URL", type: "text" },
                     { key: "stock", label: "Stock", type: "number" },
                   ].map((f) => (
                     <div key={f.key}>
@@ -280,6 +304,29 @@ export default function Admin() {
                       />
                     </div>
                   ))}
+                  <div>
+                    <label className="block text-xs font-semibold mb-1">Product Image</label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={uploadingImage}
+                      className="w-full rounded-xl border-2 border-ink bg-paper px-3 py-2 text-sm file:mr-3 file:rounded-full file:border-2 file:border-ink file:bg-primary file:text-primary-foreground file:px-3 file:py-1 file:text-xs file:font-bold"
+                    />
+                    {uploadingImage && (
+                      <p className="mt-1 text-xs text-muted-foreground">Uploading...</p>
+                    )}
+                    {productForm.image_url && (
+                      <div className="mt-2">
+                        <img
+                          src={productForm.image_url}
+                          alt="Preview"
+                          className="h-32 w-32 object-cover rounded-xl border-2 border-ink"
+                        />
+                        <p className="mt-1 text-xs text-muted-foreground truncate">{productForm.image_url}</p>
+                      </div>
+                    )}
+                  </div>
                   <label className="flex items-center gap-2 text-sm">
                     <input
                       type="checkbox"
