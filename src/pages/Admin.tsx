@@ -284,9 +284,7 @@ export default function Admin() {
                   {[
                     { key: "name", label: "Name", type: "text" },
                     { key: "price", label: "Price (EGP)", type: "number" },
-                    { key: "description", label: "Description", type: "text" },
                     { key: "badge", label: "Badge", type: "text" },
-                    { key: "badge_tone", label: "Badge Tone", type: "text" },
                     { key: "stock", label: "Stock", type: "number" },
                   ].map((f) => (
                     <div key={f.key}>
@@ -304,6 +302,37 @@ export default function Admin() {
                       />
                     </div>
                   ))}
+                  <div>
+                    <label className="block text-xs font-semibold mb-1">Description</label>
+                    <textarea
+                      rows={5}
+                      value={productForm.description ?? ""}
+                      onChange={(e) =>
+                        setProductForm((prev) => ({
+                          ...prev,
+                          description: e.target.value,
+                        }))
+                      }
+                      className="w-full rounded-xl border-2 border-ink bg-paper px-3 py-2 text-sm focus:outline-none resize-none overflow-y-auto"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold mb-1">Badge Tone</label>
+                    <select
+                      value={productForm.badge_tone || "primary"}
+                      onChange={(e) =>
+                        setProductForm((prev) => ({
+                          ...prev,
+                          badge_tone: e.target.value,
+                        }))
+                      }
+                      className="w-full rounded-xl border-2 border-ink bg-paper px-3 py-2 text-sm focus:outline-none"
+                    >
+                      <option value="primary">Primary</option>
+                      <option value="accent">Accent</option>
+                      <option value="mint">Mint</option>
+                    </select>
+                  </div>
                   <div>
                     <label className="block text-xs font-semibold mb-1">Product Image</label>
                     <input
